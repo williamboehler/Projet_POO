@@ -10,6 +10,16 @@ import java.util.*;
 
 public class Test extends JPanel {
 
+    private String pathnamefile;
+
+    public Test(String file) {
+        this.pathnamefile = file;
+    }
+
+    public String getPathnamefile() {
+        return pathnamefile;
+    }
+
     public static ArrayList readSVG(String path) throws IOException {
         ArrayList<Forms> listForms = new ArrayList<>(); //List de Forms ou stockes les formes
 
@@ -224,7 +234,7 @@ public class Test extends JPanel {
 
         ArrayList<Forms> listForms = null;
         try {
-            listForms = readSVG("D:/Images/image.svg");
+            listForms = readSVG(getPathnamefile());
         } catch (IOException e) {
             e.printStackTrace();
         }
