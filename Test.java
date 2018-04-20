@@ -217,7 +217,7 @@ public class Test extends JPanel {
     /*affichage de la fenêtre*/
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(Color.RED);
+        g.setColor(Color.BLACK);
         g.drawLine(0, 500, 1000, 500);
         g.drawLine(500, 0, 500, 1000);
 
