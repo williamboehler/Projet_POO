@@ -1,7 +1,6 @@
-import models.Circle;
-import models.Forms;
+import models.*;
+import models.Point;
 import models.Rectangle;
-import models.Ellipse;
 
 import javax.swing.*;
 import java.awt.*;
@@ -197,6 +196,155 @@ public class Test extends JPanel {
                 Ellipse ellipse = new Ellipse(cx, cy, rx, ry);
                 listForms.add(ellipse);
                 System.out.println("cx = " + cx + " y = " + cy + " ; rx = " + rx + " ; ry = " + ry);
+            }
+            else if(line.contains("<path")){
+                int indexDeb;
+                int indexEnd;
+                boolean ok = false;
+
+                while(!ok) {
+                    //cx
+                    if (line.contains("d=\"")) {
+                        indexDeb = line.indexOf('"')+1;
+                        indexEnd = line.indexOf('"', indexDeb);
+                        //TODO if indexEnd = -1
+                        ArrayList<Point> listPoints = new ArrayList<>();
+                        while(indexDeb<indexEnd){
+                            //si le point commence par M, point courant
+                            if(line.charAt(indexDeb)=='m' || line.charAt(indexDeb)=='M'){
+                                char temp = line.charAt(indexDeb);
+                                indexDeb++;
+                                String point1 = "";
+                                String point2 = "";
+                                while(line.charAt(indexDeb)!= ','){
+                                    point1 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                indexDeb++; //pour sauter la virgule ','
+                                while(line.charAt(indexDeb) != ' '){
+                                    point2 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                Point p = new Point(Double.parseDouble(point1), Double.parseDouble(point2));
+                                if(temp=='M')
+                                    p.setM(true);
+                                else
+                                    p.setm(true);
+                                listPoints.add(p);
+                                indexDeb++;
+                            }
+                            if(line.charAt(indexDeb)=='l' || line.charAt(indexDeb)=='L'){
+                                char temp = line.charAt(indexDeb);
+                                indexDeb++;
+                                if(line.charAt(indexDeb)==' ')
+                                    indexDeb++;
+                                String point1 = "";
+                                String point2 = "";
+                                while(line.charAt(indexDeb)!= ','){
+                                    point1 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                indexDeb++; //pour sauter la virgule ','
+                                while(line.charAt(indexDeb) != ' '){
+                                    point2 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                Point p = new Point(Double.parseDouble(point1), Double.parseDouble(point2));
+                                if(temp=='L')
+                                    p.setL(true);
+                                else
+                                    p.setl(true);
+                                listPoints.add(p);
+                                indexDeb++;
+                            }
+                            if(line.charAt(indexDeb)=='h' || line.charAt(indexDeb)=='H'){
+                                char temp = line.charAt(indexDeb);
+                                indexDeb++;
+                                if(line.charAt(indexDeb)==' ')
+                                    indexDeb++;
+                                String point1 = "";
+                                String point2 = "";
+                                while(line.charAt(indexDeb)!= ','){
+                                    point1 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                indexDeb++; //pour sauter la virgule ','
+                                while(line.charAt(indexDeb) != ' '){
+                                    point2 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                Point p = new Point(Double.parseDouble(point1), Double.parseDouble(point2));
+                                if(temp=='H')
+                                    p.setH(true);
+                                else
+                                    p.seth(true);
+                                listPoints.add(p);
+                                indexDeb++;
+                            }
+                            if(line.charAt(indexDeb)=='v' || line.charAt(indexDeb)=='V'){
+                                char temp = line.charAt(indexDeb);
+                                indexDeb++;
+                                if(line.charAt(indexDeb)==' ')
+                                    indexDeb++;
+                                String point1 = "";
+                                String point2 = "";
+                                while(line.charAt(indexDeb)!= ','){
+                                    point1 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                indexDeb++; //pour sauter la virgule ','
+                                while(line.charAt(indexDeb) != ' '){
+                                    point2 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                Point p = new Point(Double.parseDouble(point1), Double.parseDouble(point2));
+                                if(temp=='V')
+                                    p.setV(true);
+                                else
+                                    p.setv(true);
+                                listPoints.add(p);
+                                indexDeb++;
+                            }
+                            if(line.charAt(indexDeb)=='z' || line.charAt(indexDeb)=='Z'){
+                                Point p = new Point();
+                                if(line.charAt(indexDeb)=='Z')
+                                    p.setZ(true);
+                                else
+                                    p.setz(true);
+                                listPoints.add(p);
+                                indexDeb++;
+                            }
+                            //TODO Q et T pour les courbes
+                            else{
+                                String point1 = "";
+                                String point2 = "";
+                                while(line.charAt(indexDeb)!= ','){
+                                    point1 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                indexDeb++; //pour sauter la virgule ','
+                                while(line.charAt(indexDeb) != ' '){
+                                    point2 += line.charAt(indexDeb);
+                                    indexDeb++;
+                                }
+                                Point p = new Point(Double.parseDouble(point1), Double.parseDouble(point2));
+                                listPoints.add(p);
+                                indexDeb++;
+                            }
+                        }
+                        ok = true;
+                        listForms.add(new Trace(listPoints));
+                    }
+                    //fin de la forme
+                    if (line.contains("/>")) {
+                        ok = true;
+                    }
+                    // on passe à la ligne suivante
+                    else {
+                        line = br.readLine();
+                    }
+                }
+                //TODO remplir l'objet path
             }
             //System.out.println(line);
         }
