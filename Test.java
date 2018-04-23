@@ -1,10 +1,12 @@
 import models.*;
 import models.Point;
 import models.Rectangle;
+import org.w3c.dom.css.Rect;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Test extends JPanel {
@@ -352,24 +354,148 @@ public class Test extends JPanel {
         return listForms;
     }
 
+    public ArrayList<Forms> listeTriee(ArrayList<Forms> listForms){
+        ArrayList<Forms> newListForms = new ArrayList<Forms>();
+        double minValue = 100000;
+        int index = 0;
+        int nbRemove = 0;
+        listForms.toString();
+
+        while(newListForms.size()!=listForms.size()+nbRemove) {
+            for (int i = 0; i < listForms.size(); i++) {
+                if (listForms.get(i) instanceof Circle) {
+                    Circle c = (Circle) listForms.get(i);
+                    if (c.getLeftXPoint() < minValue) {
+                        index = i;
+                        minValue = c.getLeftXPoint();
+                    }
+                } else if (listForms.get(i) instanceof Rectangle) {
+                    Rectangle r = (Rectangle) listForms.get(i);
+                    if (r.getX() < minValue) {
+                        index = i;
+                        minValue = r.getX();
+                    }
+                } else if (listForms.get(i) instanceof Ellipse) {
+                    Ellipse e = (Ellipse) listForms.get(i);
+                    if (e.getLeftPoint() < minValue) {
+                        index = i;
+                        minValue = e.getLeftPoint();
+                    }
+                }
+            }
+            newListForms.add(listForms.get(index));
+            listForms.remove(index);
+            nbRemove++;
+            minValue = 100000;
+        }
+
+    return newListForms;
+    }
+
     //TODO trouver l'alogirthme de placement des formes
     public ArrayList<Forms> translation(ArrayList<Forms> listForms){
+
+        ArrayList<Forms> newList = new ArrayList<>();
+        ArrayList<Double> listFormerX = new ArrayList<>();
+
+        for (int i = 0; i < listForms.size(); i++) {
+            if (listForms.get(i) instanceof Circle) {
+                Circle c = (Circle) listForms.get(i);
+                listFormerX.add(c.getCx());
+            } else if (listForms.get(i) instanceof Rectangle) {
+                Rectangle r = (Rectangle) listForms.get(i);
+                listFormerX.add(r.getX());
+
+            } else if (listForms.get(i) instanceof Ellipse) {
+                Ellipse e = (Ellipse) listForms.get(i);
+                listFormerX.add(e.getCx());
+            }
+        }
 
         for(int i = 0; i< listForms.size(); i++){
             if(listForms.get(i) instanceof Circle){
                 Circle c = (Circle)listForms.get(i);
+                if(i==0){
+                    c.setCx(0);
+                    newList.add(c);
+                }
+                else{
+                    if(listForms.get(i-1) instanceof Circle){
+                        Circle cNew = (Circle)newList.get(i-1);
+                        double diff = c.getCx()-listFormerX.get(i-1);
+                        c.setCx(cNew.getCx()+diff);
+                        newList.add(c);
+                    }
+                    else if(listForms.get(i-1) instanceof Rectangle){
+                        Rectangle rNew = (Rectangle) newList.get(i-1);
+                        double diff = c.getCx()-listFormerX.get(i-1);
+                        c.setCx(rNew.getX()+diff);
+                        newList.add(c);
+                    }
+                    else if(listForms.get(i-1) instanceof Ellipse){
+                        Ellipse eNew = (Ellipse) newList.get(i-1);
+                        double diff = c.getCx()-listFormerX.get(i-1);
+                        c.setCx(eNew.getCx()+diff);
+                        newList.add(c);
+                    }
+                }
             }
             else if(listForms.get(i) instanceof Rectangle){
                 Rectangle r = (Rectangle)listForms.get(i);
-                r.setX(0);
-                r.setY(0);
-                listForms.set(i, r);
+                if(i==0){
+                    r.setX(0);
+                    newList.add(r);
+                }
+                else{
+                    if(listForms.get(i-1) instanceof Circle){
+                        Circle cNew = (Circle)newList.get(i-1);
+                        double diff = r.getX()-listFormerX.get(i-1);
+                        r.setX(cNew.getCx()+diff);
+                        newList.add(r);
+                    }
+                    else if(listForms.get(i-1) instanceof Rectangle){
+                        Rectangle rNew = (Rectangle) newList.get(i-1);
+                        double diff = r.getX()-listFormerX.get(i-1);
+                        r.setX(rNew.getX()+diff);
+                        newList.add(r);
+                    }
+                    else if(listForms.get(i-1) instanceof Ellipse){
+                        Ellipse eNew = (Ellipse) newList.get(i-1);
+                        double diff = r.getX()-listFormerX.get(i-1);
+                        r.setX(eNew.getCx()+diff);
+                        newList.add(r);
+                    }
+                }
             }
             else if(listForms.get(i) instanceof Ellipse){
-                Ellipse e = (Ellipse)listForms.get(i);
+                Ellipse e = (Ellipse) listForms.get(i);
+                if(i==0){
+                    e.setCx(0);
+                    newList.add(e);
+                }
+                else {
+                    if(listForms.get(i-1) instanceof Circle){
+                        Circle cNew = (Circle)newList.get(i-1);
+                        double diff = e.getCx()-listFormerX.get(i-1);
+                        e.setCx(cNew.getCx()+diff);
+                        newList.add(e);
+                    }
+                    else if(listForms.get(i-1) instanceof Rectangle){
+                        Rectangle rNew = (Rectangle) newList.get(i-1);
+                        double diff = e.getCx()-listFormerX.get(i-1);
+                        e.setCx(rNew.getX()+diff);
+                        newList.add(e);
+                    }
+                    else if(listForms.get(i-1) instanceof Ellipse){
+                        Ellipse eNew = (Ellipse) newList.get(i-1);
+                        double diff = e.getCx()-listFormerX.get(i-1);
+                        e.setCx(eNew.getCx()+diff);
+                        newList.add(e);
+                    }
+                }
             }
         }
-        return listForms;
+        return newList;
     }
 
     /*affichage de la fenêtre*/
@@ -387,6 +513,8 @@ public class Test extends JPanel {
             e.printStackTrace();
         }
 
+        //on trie la liste en fonction du point le plus a gauche
+        listForms = listeTriee(listForms);
         //ligne qui s'occupe de déplacer la forme. A retirer pour voir la forme de base !
         listForms = translation(listForms);
 
@@ -402,6 +530,12 @@ public class Test extends JPanel {
             else if(listForms.get(i) instanceof Ellipse){
                 Ellipse e = (Ellipse)listForms.get(i);
                 g.fillOval((int)e.getCx(), (int)e.getCy(), (int)e.getRayonX(), (int)e.getRayonY());
+            }
+            else if(listForms.get(i) instanceof Trace){
+                Trace t = (Trace)listForms.get(i);
+                ArrayList<Point> listPoints = t.getListPoints();
+                for(int j = 0 ; j<listPoints.size(); j++)
+                    g.drawLine((int)listPoints.get(i).getX(), (int)listPoints.get(i).getY(), (int)listPoints.get(j++).getX(), (int)listPoints.get(j++).getY());
             }
         }
     }
