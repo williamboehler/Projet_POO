@@ -1,12 +1,11 @@
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import models.*;
 import models.Point;
 import models.Rectangle;
-import org.w3c.dom.css.Rect;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Test extends JPanel {
@@ -199,6 +198,7 @@ public class Test extends JPanel {
                 listForms.add(ellipse);
                 System.out.println("cx = " + cx + " y = " + cy + " ; rx = " + rx + " ; ry = " + ry);
             }
+            //si c'est un tracé
             else if(line.contains("<path")){
                 int indexDeb;
                 int indexEnd;
@@ -354,6 +354,7 @@ public class Test extends JPanel {
         return listForms;
     }
 
+    //trie dans l'ordre croissant une liste de formes en fonction de la coordonnee X
     public ArrayList<Forms> listeTriee(ArrayList<Forms> listForms){
         ArrayList<Forms> newListForms = new ArrayList<Forms>();
         double minValue = 100000;
@@ -398,6 +399,7 @@ public class Test extends JPanel {
         ArrayList<Forms> newList = new ArrayList<>();
         ArrayList<Double> listFormerX = new ArrayList<>();
 
+        //on stocke les valeurs de la coordonnee X pour chaque forme avant modification
         for (int i = 0; i < listForms.size(); i++) {
             if (listForms.get(i) instanceof Circle) {
                 Circle c = (Circle) listForms.get(i);
@@ -412,6 +414,7 @@ public class Test extends JPanel {
             }
         }
 
+        //translation le plus à gauche
         for(int i = 0; i< listForms.size(); i++){
             if(listForms.get(i) instanceof Circle){
                 Circle c = (Circle)listForms.get(i);
@@ -495,6 +498,7 @@ public class Test extends JPanel {
                 }
             }
         }
+        //TODO translation le plus haut
         return newList;
     }
 
@@ -531,6 +535,7 @@ public class Test extends JPanel {
                 Ellipse e = (Ellipse)listForms.get(i);
                 g.fillOval((int)e.getCx(), (int)e.getCy(), (int)e.getRayonX(), (int)e.getRayonY());
             }
+            //ne fonctionne pas
             else if(listForms.get(i) instanceof Trace){
                 Trace t = (Trace)listForms.get(i);
                 ArrayList<Point> listPoints = t.getListPoints();
@@ -572,7 +577,7 @@ public class Test extends JPanel {
         return destination.getPath();
     }
 
-    //TODO faire une fonction qui modifie la coipie du fichier svg avec les nouvelles données après optimisation
+    //TODO faire une fonction qui modifie la copie du fichier svg avec les nouvelles données après optimisation
 
     public static void main(String[] args) { }
 }

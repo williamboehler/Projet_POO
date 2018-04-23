@@ -1,3 +1,6 @@
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -39,6 +42,5 @@ public class Program {
                     exit(0);
                 }
             }
-
     }
 }
