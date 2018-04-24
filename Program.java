@@ -1,11 +1,6 @@
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.regex.Pattern;
 

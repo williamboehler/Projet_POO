@@ -1,5 +1,3 @@
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import models.*;
 import models.Point;
 import models.Rectangle;
@@ -355,12 +353,11 @@ public class Test extends JPanel {
     }
 
     //trie dans l'ordre croissant une liste de formes en fonction de la coordonnee X
-    public ArrayList<Forms> listeTriee(ArrayList<Forms> listForms){
+    public ArrayList<Forms> listeTrieeX(ArrayList<Forms> listForms){
         ArrayList<Forms> newListForms = new ArrayList<Forms>();
         double minValue = 100000;
         int index = 0;
         int nbRemove = 0;
-        listForms.toString();
 
         while(newListForms.size()!=listForms.size()+nbRemove) {
             for (int i = 0; i < listForms.size(); i++) {
@@ -378,9 +375,9 @@ public class Test extends JPanel {
                     }
                 } else if (listForms.get(i) instanceof Ellipse) {
                     Ellipse e = (Ellipse) listForms.get(i);
-                    if (e.getLeftPoint() < minValue) {
+                    if (e.getLeftPointX() < minValue) {
                         index = i;
-                        minValue = e.getLeftPoint();
+                        minValue = e.getLeftPointX();
                     }
                 }
             }
@@ -393,8 +390,45 @@ public class Test extends JPanel {
     return newListForms;
     }
 
-    //TODO trouver l'alogirthme de placement des formes
-    public ArrayList<Forms> translation(ArrayList<Forms> listForms){
+    //trie dans l'ordre croissant une liste de formes en fonction de la coordonnee X
+    public ArrayList<Forms> listeTrieeY(ArrayList<Forms> listForms){
+        ArrayList<Forms> newListForms = new ArrayList<Forms>();
+        double minValue = 100000;
+        int index = 0;
+        int nbRemove = 0;
+
+        while(newListForms.size()!=listForms.size()+nbRemove) {
+            for (int i = 0; i < listForms.size(); i++) {
+                if (listForms.get(i) instanceof Circle) {
+                    Circle c = (Circle) listForms.get(i);
+                    if (c.getLeftYPoint() < minValue) {
+                        index = i;
+                        minValue = c.getLeftYPoint();
+                    }
+                } else if (listForms.get(i) instanceof Rectangle) {
+                    Rectangle r = (Rectangle) listForms.get(i);
+                    if (r.getX() < minValue) {
+                        index = i;
+                        minValue = r.getX();
+                    }
+                } else if (listForms.get(i) instanceof Ellipse) {
+                    Ellipse e = (Ellipse) listForms.get(i);
+                    if (e.getLeftPointY() < minValue) {
+                        index = i;
+                        minValue = e.getLeftPointY();
+                    }
+                }
+            }
+            newListForms.add(listForms.get(index));
+            listForms.remove(index);
+            nbRemove++;
+            minValue = 100000;
+        }
+
+        return newListForms;
+    }
+
+    public ArrayList<Forms> translationX(ArrayList<Forms> listForms){
 
         ArrayList<Forms> newList = new ArrayList<>();
         ArrayList<Double> listFormerX = new ArrayList<>();
@@ -403,14 +437,14 @@ public class Test extends JPanel {
         for (int i = 0; i < listForms.size(); i++) {
             if (listForms.get(i) instanceof Circle) {
                 Circle c = (Circle) listForms.get(i);
-                listFormerX.add(c.getCx());
+                listFormerX.add(c.getLeftXPoint());
             } else if (listForms.get(i) instanceof Rectangle) {
                 Rectangle r = (Rectangle) listForms.get(i);
                 listFormerX.add(r.getX());
 
             } else if (listForms.get(i) instanceof Ellipse) {
                 Ellipse e = (Ellipse) listForms.get(i);
-                listFormerX.add(e.getCx());
+                listFormerX.add(e.getLeftPointX());
             }
         }
 
@@ -419,14 +453,14 @@ public class Test extends JPanel {
             if(listForms.get(i) instanceof Circle){
                 Circle c = (Circle)listForms.get(i);
                 if(i==0){
-                    c.setCx(0);
+                    c.setCx(0+c.getRayon());
                     newList.add(c);
                 }
                 else{
                     if(listForms.get(i-1) instanceof Circle){
                         Circle cNew = (Circle)newList.get(i-1);
                         double diff = c.getCx()-listFormerX.get(i-1);
-                        c.setCx(cNew.getCx()+diff);
+                        c.setCx(cNew.getLeftXPoint()+diff);
                         newList.add(c);
                     }
                     else if(listForms.get(i-1) instanceof Rectangle){
@@ -438,7 +472,7 @@ public class Test extends JPanel {
                     else if(listForms.get(i-1) instanceof Ellipse){
                         Ellipse eNew = (Ellipse) newList.get(i-1);
                         double diff = c.getCx()-listFormerX.get(i-1);
-                        c.setCx(eNew.getCx()+diff);
+                        c.setCx(eNew.getLeftPointX()+diff);
                         newList.add(c);
                     }
                 }
@@ -453,7 +487,7 @@ public class Test extends JPanel {
                     if(listForms.get(i-1) instanceof Circle){
                         Circle cNew = (Circle)newList.get(i-1);
                         double diff = r.getX()-listFormerX.get(i-1);
-                        r.setX(cNew.getCx()+diff);
+                        r.setX(cNew.getLeftXPoint()+diff);
                         newList.add(r);
                     }
                     else if(listForms.get(i-1) instanceof Rectangle){
@@ -465,7 +499,7 @@ public class Test extends JPanel {
                     else if(listForms.get(i-1) instanceof Ellipse){
                         Ellipse eNew = (Ellipse) newList.get(i-1);
                         double diff = r.getX()-listFormerX.get(i-1);
-                        r.setX(eNew.getCx()+diff);
+                        r.setX(eNew.getLeftPointX()+diff);
                         newList.add(r);
                     }
                 }
@@ -473,14 +507,14 @@ public class Test extends JPanel {
             else if(listForms.get(i) instanceof Ellipse){
                 Ellipse e = (Ellipse) listForms.get(i);
                 if(i==0){
-                    e.setCx(0);
+                    e.setCx(0+e.getRayonX());
                     newList.add(e);
                 }
                 else {
                     if(listForms.get(i-1) instanceof Circle){
                         Circle cNew = (Circle)newList.get(i-1);
                         double diff = e.getCx()-listFormerX.get(i-1);
-                        e.setCx(cNew.getCx()+diff);
+                        e.setCx(cNew.getLeftXPoint()+diff);
                         newList.add(e);
                     }
                     else if(listForms.get(i-1) instanceof Rectangle){
@@ -492,12 +526,130 @@ public class Test extends JPanel {
                     else if(listForms.get(i-1) instanceof Ellipse){
                         Ellipse eNew = (Ellipse) newList.get(i-1);
                         double diff = e.getCx()-listFormerX.get(i-1);
-                        e.setCx(eNew.getCx()+diff);
+                        e.setCx(eNew.getLeftPointX()+diff);
                         newList.add(e);
                     }
                 }
             }
         }
+        /*try {
+            WriteNewFile(newList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        //TODO translation le plus haut*
+        return newList;
+    }
+
+    public ArrayList<Forms> translationY(ArrayList<Forms> listForms){
+
+        ArrayList<Forms> newList = new ArrayList<>();
+        ArrayList<Double> listFormerY = new ArrayList<>();
+
+        //on stocke les valeurs de la coordonnee X pour chaque forme avant modification
+        for (int i = 0; i < listForms.size(); i++) {
+            if (listForms.get(i) instanceof Circle) {
+                Circle c = (Circle) listForms.get(i);
+                listFormerY.add(c.getLeftYPoint());
+            } else if (listForms.get(i) instanceof Rectangle) {
+                Rectangle r = (Rectangle) listForms.get(i);
+                listFormerY.add(r.getY());
+
+            } else if (listForms.get(i) instanceof Ellipse) {
+                Ellipse e = (Ellipse) listForms.get(i);
+                listFormerY.add(e.getLeftPointY());
+            }
+        }
+
+        //translation le plus à gauche
+        for(int i = 0; i< listForms.size(); i++){
+            if(listForms.get(i) instanceof Circle){
+                Circle c = (Circle)listForms.get(i);
+                if(i==0){
+                    c.setCy(0+c.getRayon());
+                    newList.add(c);
+                }
+                else{
+                    if(listForms.get(i-1) instanceof Circle){
+                        Circle cNew = (Circle)newList.get(i-1);
+                        double diff = c.getCy()-listFormerY.get(i-1);
+                        c.setCy(cNew.getLeftYPoint()+diff);
+                        newList.add(c);
+                    }
+                    else if(listForms.get(i-1) instanceof Rectangle){
+                        Rectangle rNew = (Rectangle) newList.get(i-1);
+                        double diff = c.getCy()-listFormerY.get(i-1);
+                        c.setCy(rNew.getY()+diff);
+                        newList.add(c);
+                    }
+                    else if(listForms.get(i-1) instanceof Ellipse){
+                        Ellipse eNew = (Ellipse) newList.get(i-1);
+                        double diff = c.getCy()-listFormerY.get(i-1);
+                        c.setCy(eNew.getLeftPointY()+diff);
+                        newList.add(c);
+                    }
+                }
+            }
+            else if(listForms.get(i) instanceof Rectangle){
+                Rectangle r = (Rectangle)listForms.get(i);
+                if(i==0){
+                    r.setY(0);
+                    newList.add(r);
+                }
+                else{
+                    if(listForms.get(i-1) instanceof Circle){
+                        Circle cNew = (Circle)newList.get(i-1);
+                        double diff = r.getY()-listFormerY.get(i-1);
+                        r.setY(cNew.getLeftYPoint()+diff);
+                        newList.add(r);
+                    }
+                    else if(listForms.get(i-1) instanceof Rectangle){
+                        Rectangle rNew = (Rectangle) newList.get(i-1);
+                        double diff = r.getY()-listFormerY.get(i-1);
+                        r.setY(rNew.getY()+diff);
+                        newList.add(r);
+                    }
+                    else if(listForms.get(i-1) instanceof Ellipse){
+                        Ellipse eNew = (Ellipse) newList.get(i-1);
+                        double diff = r.getY()-listFormerY.get(i-1);
+                        r.setY(eNew.getLeftPointY()+diff);
+                        newList.add(r);
+                    }
+                }
+            }
+            else if(listForms.get(i) instanceof Ellipse){
+                Ellipse e = (Ellipse) listForms.get(i);
+                if(i==0){
+                    e.setCy(0+e.getRayonY());
+                    newList.add(e);
+                }
+                else {
+                    if(listForms.get(i-1) instanceof Circle){
+                        Circle cNew = (Circle)newList.get(i-1);
+                        double diff = e.getCy()-listFormerY.get(i-1);
+                        e.setCy(cNew.getLeftYPoint()+diff);
+                        newList.add(e);
+                    }
+                    else if(listForms.get(i-1) instanceof Rectangle){
+                        Rectangle rNew = (Rectangle) newList.get(i-1);
+                        double diff = e.getCy()-listFormerY.get(i-1);
+                        e.setCy(rNew.getY()+diff);
+                        newList.add(e);
+                    }
+                    else if(listForms.get(i-1) instanceof Ellipse){
+                        Ellipse eNew = (Ellipse) newList.get(i-1);
+                        double diff = e.getCy()-listFormerY.get(i-1);
+                        e.setCy(eNew.getLeftPointY()+diff);
+                        newList.add(e);
+                    }
+                }
+            }
+        }
+        /*try {
+            WriteNewFile(newList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         //TODO translation le plus haut
         return newList;
     }
@@ -518,9 +670,17 @@ public class Test extends JPanel {
         }
 
         //on trie la liste en fonction du point le plus a gauche
-        listForms = listeTriee(listForms);
+        listForms = listeTrieeX(listForms);
         //ligne qui s'occupe de déplacer la forme. A retirer pour voir la forme de base !
-        listForms = translation(listForms);
+        listForms = translationX(listForms);
+
+        listForms = translationY(listForms);
+
+        try {
+            WriteNewFile(listForms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for(int i = 0; i< listForms.size(); i++){
             if(listForms.get(i) instanceof Circle){
@@ -545,39 +705,28 @@ public class Test extends JPanel {
         }
     }
 
-    // recopie le fichier (on ne travaille pas sur le fichier d'origine pour la réécriture après optimisation)
-    public static String copyFile(File source){ //Methode permettant la copie d'un fichier
-        File destination = new File("copyFile.svg");
+    public void WriteNewFile(ArrayList<Forms> listForms) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(pathnamefile));
+        String line;
 
-        // Declaration des flux
-        java.io.FileInputStream sourceFile = null;
-        java.io.FileOutputStream destinationFile = null;
-        try {
-            // Création du fichier :
-            destination.createNewFile();
-            // Ouverture des flux
-            sourceFile = new java.io.FileInputStream(source);
-            destinationFile = new java.io.FileOutputStream(destination);
-            // Lecture par segment de 0.5Mo
-            byte buffer[]=new byte[512*1024];
-            int nbLecture;
-            while( (nbLecture = sourceFile.read(buffer)) != -1 ) {
-                destinationFile.write(buffer, 0, nbLecture);
+        File f = new File("C:\\Users\\admin\\Desktop\\newFile.svg");
+        FileWriter fw = new FileWriter(f);
+        int index = 0;
+        //on lit le fichier ligne par ligne
+        while ((line = br.readLine()) != null) {
+            //si on on tombe sur une forme on recopie une forme
+            if(line.contains("<rec") || line.contains("<circle") || line.contains("<ellipse")){
+                fw.write(listForms.get(index++).toString());
+                //si la forme est spécifiée sur le plusieurs lignes
+                while(!line.contains("/>"))
+                    line = br.readLine();
             }
-        } catch( java.io.FileNotFoundException f ) {
-        } catch( java.io.IOException e ) {
-        } finally {
-            try {
-                sourceFile.close();
-            } catch(Exception e) { }
-            try {
-                destinationFile.close();
-            } catch(Exception e) { }
+            else
+                fw.write(line+"\n"); //on recopie la ligne du fichier
         }
-        return destination.getPath();
+        fw.close();
+        br.close();
     }
-
-    //TODO faire une fonction qui modifie la copie du fichier svg avec les nouvelles données après optimisation
 
     public static void main(String[] args) { }
 }

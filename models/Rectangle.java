@@ -44,4 +44,9 @@ public class Rectangle extends Forms {
     public void setHeight(double height) {
         this.height = height;
     }
+
+    @Override
+    public String toString(){
+        return "<rect x=\"" + getX() + "\" y=\"" + getY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() + "\" />\n";
+    }
 }

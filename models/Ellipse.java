@@ -46,7 +46,16 @@ public class Ellipse extends Forms {
         this.rayonY = rayonY;
     }
 
-    public double getLeftPoint(){
+    public double getLeftPointX(){
         return getCx() - getRayonX();
+    }
+
+    public double getLeftPointY(){
+        return getCy() - getRayonY();
+    }
+
+    @Override
+    public String toString(){
+        return "<ellipse cx=\"" + getCx() + "\" cy=\"" + getCy() + "\" rx=\"" + getRayonX() + "\" ry=\"" + getRayonY() + "\" />\n";
     }
 }

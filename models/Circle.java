@@ -44,4 +44,9 @@ public class Circle extends Forms {
         return getCy() - getRayon();
     }
 
+    @Override
+    public String toString(){
+        return "<circle cx=\"" + getCx() + "\" cy=\"" + getCy() + "\" r=\"" + getRayon() +"\" />\n";
+    }
+
 }
