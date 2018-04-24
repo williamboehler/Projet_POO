@@ -532,12 +532,6 @@ public class Test extends JPanel {
                 }
             }
         }
-        /*try {
-            WriteNewFile(newList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        //TODO translation le plus haut*
         return newList;
     }
 
@@ -645,12 +639,6 @@ public class Test extends JPanel {
                 }
             }
         }
-        /*try {
-            WriteNewFile(newList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        //TODO translation le plus haut
         return newList;
     }
 
@@ -671,9 +659,14 @@ public class Test extends JPanel {
 
         //on trie la liste en fonction du point le plus a gauche
         listForms = listeTrieeX(listForms);
-        //ligne qui s'occupe de déplacer la forme. A retirer pour voir la forme de base !
+
+        //Translation le plus à gauche possible
         listForms = translationX(listForms);
 
+        //on trie la liste en fonction du point le plus a gauche
+        listForms = listeTrieeY(listForms);
+
+        //Translation le plus haut possible
         listForms = translationY(listForms);
 
         try {
