@@ -5,6 +5,7 @@ public class Rectangle extends Forms {
     private double y;
     private double width;
     private double height;
+    private double rotate = -10;
 
     public Rectangle(double x, double y, double width, double height) {
         this.x = x;
@@ -45,8 +46,28 @@ public class Rectangle extends Forms {
         this.height = height;
     }
 
+    public double getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(double rotate) {
+        this.rotate = rotate;
+    }
+
+    public String rotate(){
+            return "<g transform = \"" + "rotate("+getRotate()+" "+ getWidth()/2 + " " + getHeight()/2 +")\">\n";
+    }
+
     @Override
     public String toString(){
-        return "<rect x=\"" + getX() + "\" y=\"" + getY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() + "\" />\n";
+        String res = "";
+        if(getRotate()!=0){
+            res += rotate();
+        }
+        res += "<rect x=\"" + getX() + "\" y=\"" + getY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() +"\" />\n";
+        if(getRotate()!=0){
+            res += "</g>\n";
+        }
+        return res;
     }
 }

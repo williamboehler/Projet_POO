@@ -6,6 +6,7 @@ public class Ellipse extends Forms {
     private double cy;
     private double rayonX; //rayon x du cercle
     private double rayonY; //rayon y du cercle
+    private double rotate = -10;
 
     public Ellipse(double cx, double cy, double rayonX, double rayonY) {
         this.cx = cx;
@@ -54,8 +55,28 @@ public class Ellipse extends Forms {
         return getCy() - getRayonY();
     }
 
+    public double getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(double rotate) {
+        this.rotate = rotate;
+    }
+
+    public String rotate(){
+        return "<g transform = \"" + "rotate("+getRotate()+")\">\n";
+    }
+
     @Override
     public String toString(){
-        return "<ellipse cx=\"" + getCx() + "\" cy=\"" + getCy() + "\" rx=\"" + getRayonX() + "\" ry=\"" + getRayonY() + "\" />\n";
+        String res = "";
+        /*if(getRotate()!=0){
+            res += rotate();
+        }*/
+        res += "<ellipse cx=\"" + getCx() + "\" cy=\"" + getCy() + "\" rx=\"" + getRayonX() + "\" ry=\"" + getRayonY() + "\" />\n";
+        /*if(getRotate()!=0){
+            res += "</g>\n";
+        }*/
+        return res;
     }
 }

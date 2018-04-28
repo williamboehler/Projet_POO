@@ -4,6 +4,7 @@ import models.Rectangle;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Test extends JPanel {
@@ -355,7 +356,7 @@ public class Test extends JPanel {
     //trie dans l'ordre croissant une liste de formes en fonction de la coordonnee X
     public ArrayList<Forms> listeTrieeX(ArrayList<Forms> listForms){
         ArrayList<Forms> newListForms = new ArrayList<Forms>();
-        double minValue = 100000;
+        double minValue = 1000000000;
         int index = 0;
         int nbRemove = 0;
 
@@ -384,7 +385,7 @@ public class Test extends JPanel {
             newListForms.add(listForms.get(index));
             listForms.remove(index);
             nbRemove++;
-            minValue = 100000;
+            minValue = 1000000000;
         }
 
     return newListForms;
@@ -393,7 +394,7 @@ public class Test extends JPanel {
     //trie dans l'ordre croissant une liste de formes en fonction de la coordonnee X
     public ArrayList<Forms> listeTrieeY(ArrayList<Forms> listForms){
         ArrayList<Forms> newListForms = new ArrayList<Forms>();
-        double minValue = 100000;
+        double minValue = 1000000000;
         int index = 0;
         int nbRemove = 0;
 
@@ -422,7 +423,7 @@ public class Test extends JPanel {
             newListForms.add(listForms.get(index));
             listForms.remove(index);
             nbRemove++;
-            minValue = 100000;
+            minValue = 1000000000;
         }
 
         return newListForms;
@@ -642,6 +643,68 @@ public class Test extends JPanel {
         return newList;
     }
 
+    public ArrayList<Forms> translation(ArrayList<Forms> listForms, double x, double y){
+        ArrayList<Forms> newList = new ArrayList<>();
+        for(int i=0; i<listForms.size(); i++){
+            if(listForms.get(i) instanceof Circle){
+                Circle c = (Circle)listForms.get(i);
+                c.setCx(c.getCx()+x);
+                c.setCy(c.getCy()+y);
+                newList.add(c);
+            }
+            else if(listForms.get(i) instanceof Rectangle){
+                Rectangle r = (Rectangle) listForms.get(i);
+                r.setX(r.getX()+x);
+                r.setY(r.getY()+y);
+                newList.add(r);
+            }
+            else if(listForms.get(i) instanceof Ellipse){
+                Ellipse e = (Ellipse) listForms.get(i);
+                e.setCx(e.getCx()+x);
+                e.setCy(e.getCy()+y);
+                newList.add(e);
+            }
+        }
+        return newList;
+    }
+
+    /* fait la rotation d'un point */
+    public Point rotationPoint(double x, double y, double theta){
+        double thetaRad = theta * Math.PI/180;
+        double rx = x*Math.cos(thetaRad) - y * Math.sin(thetaRad);
+        double ry = x * Math.sin(thetaRad) + y * Math.cos(thetaRad);
+        return new Point(rx, ry);
+    }
+
+    /* fait la rotation des formes contenues dans une liste de Forms */
+    public ArrayList<Forms> rotationForms(ArrayList<Forms> listForms, double theta){
+        ArrayList<Forms> newList = new ArrayList<>();
+        for(int i = 0; i<listForms.size(); i++){
+            if(listForms.get(i) instanceof Circle){
+                Circle c = (Circle)listForms.get(i);
+                Point p = rotationPoint(c.getCx(), c.getCy(), theta);
+                c.setCx(p.getX());
+                c.setCy(p.getY());
+                newList.add(c);
+            }
+            else if(listForms.get(i) instanceof Rectangle){
+                Rectangle r = (Rectangle) listForms.get(i);
+                Point p = rotationPoint(r.getX(), r.getY(), theta);
+                r.setX(p.getX());
+                r.setY(p.getY());
+                newList.add(r);
+            }
+            else if(listForms.get(i) instanceof Ellipse){
+                Ellipse e = (Ellipse) listForms.get(i);
+                Point p = rotationPoint(e.getCx(), e.getCy(), theta);
+                e.setCx(p.getX());
+                e.setCy(p.getY());
+                newList.add(e);
+            }
+        }
+        return newList;
+    }
+
     /*affichage de la fenêtre*/
     public void paint(Graphics g) {
         super.paint(g);
@@ -666,16 +729,30 @@ public class Test extends JPanel {
         //on trie la liste en fonction du point le plus a gauche
         listForms = listeTrieeY(listForms);
 
+        /* --- TEST --- */
+
         //Translation le plus haut possible
         listForms = translationY(listForms);
 
+        ArrayList<Forms> res = new ArrayList<>();
+        res = rotationForms(listForms, -10);
+
+        res = translation(listForms, 40, 40);
+        res = listeTrieeX(res);
+        res = translationX(res);
+
+        res = listeTrieeY(res);
+        res = translationY(res);
+
+        /* --- FIN TEST --- */
+
         try {
-            WriteNewFile(listForms);
+            WriteNewFile(res);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        for(int i = 0; i< listForms.size(); i++){
+        /*for(int i = 0; i< listForms.size(); i++){
             if(listForms.get(i) instanceof Circle){
                 Circle c = (Circle)listForms.get(i);
                 g.fillOval((int)c.getCx(), (int)c.getCy(), (int)c.getRayon(), (int)c.getRayon());
@@ -695,7 +772,7 @@ public class Test extends JPanel {
                 for(int j = 0 ; j<listPoints.size(); j++)
                     g.drawLine((int)listPoints.get(i).getX(), (int)listPoints.get(i).getY(), (int)listPoints.get(j++).getX(), (int)listPoints.get(j++).getY());
             }
-        }
+        }*/
     }
 
     public void WriteNewFile(ArrayList<Forms> listForms) throws IOException {
