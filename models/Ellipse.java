@@ -55,6 +55,14 @@ public class Ellipse extends Forms {
         return getCy() - getRayonY();
     }
 
+    public double getRightXPoint(){
+        return getCx()+getRayonX();
+    }
+
+    public double getRightYPoint(){
+        return getCy() + getRayonY();
+    }
+
     public double getRotate() {
         return rotate;
     }

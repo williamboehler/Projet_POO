@@ -1,3 +1,4 @@
 package models;
 
-public abstract class Forms { }
+public abstract class Forms {
+}

@@ -61,13 +61,13 @@ public class Rectangle extends Forms {
     @Override
     public String toString(){
         String res = "";
-        if(getRotate()!=0){
+        /*if(getRotate()!=0){
             res += rotate();
-        }
+        }*/
         res += "<rect x=\"" + getX() + "\" y=\"" + getY() + "\" width=\"" + getWidth() + "\" height=\"" + getHeight() +"\" />\n";
-        if(getRotate()!=0){
+        /*if(getRotate()!=0){
             res += "</g>\n";
-        }
+        }*/
         return res;
     }
 }

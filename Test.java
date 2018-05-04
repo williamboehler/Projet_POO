@@ -10,6 +10,9 @@ import java.util.*;
 public class Test extends JPanel {
 
     private String pathnamefile;
+    private double rotate = 0;
+    private Point p1 = new Point(50, 0);
+    private Point p2 = new Point(0, 50);
 
     public Test(String file) {
         this.pathnamefile = file;
@@ -17,6 +20,14 @@ public class Test extends JPanel {
 
     public String getPathnamefile() {
         return pathnamefile;
+    }
+
+    public double getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(double rotate) {
+        this.rotate = rotate;
     }
 
     public static ArrayList readSVG(String path) throws IOException {
@@ -705,6 +716,216 @@ public class Test extends JPanel {
         return newList;
     }
 
+    public ArrayList<Forms> copyListForms(ArrayList<Forms> list){
+        ArrayList<Forms> copy = new ArrayList<>();
+        for(int i=0; i<list.size(); i++){
+            if(list.get(i) instanceof Circle){
+                Circle c = (Circle)list.get(i);
+                Circle copyC = new Circle(c.getCx(), c.getCy(), c.getRayon());
+                copy.add(copyC);
+            }
+            else if(list.get(i) instanceof Rectangle){
+                Rectangle r = (Rectangle) list.get(i);
+                Rectangle copyR = new Rectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+                copy.add(copyR);
+            }
+            else if(list.get(i) instanceof Ellipse){
+                Ellipse e = (Ellipse) list.get(i);
+                Ellipse copyE = new Ellipse(e.getCx(), e.getCy(), e.getRayonX(), e.getRayonY());
+                copy.add(copyE);
+            }
+        }
+        return copy;
+    }
+
+    //TODO
+    public int nbPlaques(ArrayList<Forms> list){
+        int res = 1; //nombre de plaques
+        boolean plaque1 = true; //plaque en haut à gauche
+        boolean plaque2 = false; //plaque en haut à droite
+        boolean plaque3 = false; //plaque en bas à gauche
+        boolean plaque4 = false; //plaque en bas à droite
+
+        ArrayList<Forms> workingList = copyListForms(list);
+        workingList = listeTrieeX(workingList);
+
+        int indexRight = workingList.size()-1;
+        //point le plus + droite
+        if(workingList.get(indexRight) instanceof Circle){
+            Circle c = (Circle)workingList.get(indexRight);
+            if(c.getRightXPoint()>p1.getX() && c.getRightYPoint()<p2.getY())
+                plaque2 = true;
+            if(c.getRightXPoint()>p1.getX() && c.getRightYPoint()>p2.getY())
+                plaque4 = true;
+            if(c.getRightXPoint()<p1.getX() && c.getRightYPoint()>p2.getY())
+                plaque3 = true;
+        }
+        else if(workingList.get(0) instanceof Rectangle){
+            Rectangle r = (Rectangle) workingList.get(indexRight);
+            if(r.getX()+r.getWidth()>p1.getX() && r.getY()+r.getHeight()<p2.getY())
+                plaque2 = true;
+            if(r.getX()+getWidth()>p1.getX() && r.getY()+r.getHeight()>p2.getY())
+                plaque4 = true;
+            if(r.getX()+r.getWidth()<p1.getX() && r.getY()+r.getHeight()>p2.getY())
+                plaque3 = true;
+        }
+        else if(workingList.get(indexRight) instanceof Ellipse){
+            Ellipse e = (Ellipse) workingList.get(indexRight);
+            if(e.getRightXPoint()>p1.getX() && e.getRightYPoint()<p2.getY())
+                plaque2 = true;
+            if(e.getRightXPoint()>p1.getX() && e.getRightYPoint()>p2.getY())
+                plaque4 = true;
+            if(e.getRightXPoint()<p1.getX() && e.getRightYPoint()>p2.getY())
+                plaque3 = true;
+        }
+
+        workingList = translationY(workingList);
+
+        //point le plus bas
+        if(workingList.get(indexRight) instanceof Circle){
+            Circle c = (Circle)workingList.get(indexRight);
+            if(c.getRightXPoint()>p1.getX() && c.getRightYPoint()<p2.getY())
+                plaque2 = true;
+            if(c.getRightXPoint()>p1.getX() && c.getRightYPoint()>p2.getY())
+                plaque4 = true;
+            if(c.getRightXPoint()<p1.getX() && c.getRightYPoint()>p2.getY())
+                plaque3 = true;
+        }
+        else if(workingList.get(0) instanceof Rectangle){
+            Rectangle r = (Rectangle) workingList.get(indexRight);
+            if(r.getX()+r.getWidth()>p1.getX() && r.getY()+r.getHeight()<p2.getY())
+                plaque2 = true;
+            if(r.getX()+getWidth()>p1.getX() && r.getY()+r.getHeight()>p2.getY())
+                plaque4 = true;
+            if(r.getX()+r.getWidth()<p1.getX() && r.getY()+r.getHeight()>p2.getY())
+                plaque3 = true;
+        }
+        else if(workingList.get(indexRight) instanceof Ellipse){
+            Ellipse e = (Ellipse) workingList.get(indexRight);
+            if(e.getRightXPoint()>p1.getX() && e.getRightYPoint()<p2.getY())
+                plaque2 = true;
+            if(e.getRightXPoint()>p1.getX() && e.getRightYPoint()>p2.getY())
+                plaque4 = true;
+            if(e.getRightXPoint()<p1.getX() && e.getRightYPoint()>p2.getY())
+                plaque3 = true;
+        }
+
+        //on compte le nombre de plaques
+        if(plaque2)
+            res++;
+        if(plaque3)
+            res++;
+        if(plaque4)
+            res++;
+
+        return res;
+    }
+
+    public ArrayList<Double> transXY(ArrayList<Forms> list){
+        ArrayList<Double> res = new ArrayList<>();
+        double x = 0; //translation X
+        double y = 0; //translation Y
+
+        ArrayList<Forms> workingList = copyListForms(list);
+        workingList = listeTrieeX(workingList);
+
+        //on cherche de combien on doit décaler en X
+        if(workingList.get(0) instanceof Circle){
+            Circle c = (Circle)workingList.get(0);
+            if(c.getLeftXPoint()<0)
+                x = -c.getLeftXPoint();
+        }
+        else if(workingList.get(0) instanceof Rectangle){
+            Rectangle r = (Rectangle) workingList.get(0);
+            if(r.getX()<0)
+                x = -r.getX();
+        }
+        else if(workingList.get(0) instanceof Ellipse){
+            Ellipse e = (Ellipse) workingList.get(0);
+            if(e.getLeftPointX()<0)
+                x = -e.getLeftPointX();
+        }
+
+        workingList = listeTrieeY(workingList);
+
+        //on cherche de combien on doit décaler en Y
+        if(workingList.get(0) instanceof Circle){
+            Circle c = (Circle)workingList.get(0);
+            if(c.getLeftYPoint()<0)
+                y = -c.getLeftYPoint();
+        }
+        else if(workingList.get(0) instanceof Rectangle){
+            Rectangle r = (Rectangle) workingList.get(0);
+            if(r.getY()<0)
+                y = -r.getY();
+        }
+        else if(workingList.get(0) instanceof Ellipse){
+            Ellipse e = (Ellipse) workingList.get(0);
+            if(e.getLeftPointY()<0)
+                y = -e.getLeftPointY();
+        }
+
+        res.add(x);
+        res.add(y);
+
+        return res;
+    }
+
+    public void algo(){
+        ArrayList<Forms> listForms = new ArrayList<>(); //liste contenant les données des formes du fichier svg
+        ArrayList<Forms> workingList = new ArrayList<>(); //liste de travail
+        ArrayList<Forms> solution = new ArrayList<>(); //la solution optimale courante
+
+        /*on lit le SVG file*/
+        try {
+            listForms = readSVG(getPathnamefile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /* --- on met la figure le plus en haut à gauche possible --- */
+        listForms = listeTrieeX(listForms);//on trie la liste en fonction du point le plus a gauche
+        listForms = translationX(listForms);//Translation le plus à gauche possible
+        listForms = listeTrieeY(listForms);//on trie la liste en fonction du point le plus a gauche
+        listForms = translationY(listForms);//Translation le plus haut possible
+
+        solution = copyListForms(listForms);//on sauvegarde cette solution
+        workingList = copyListForms(solution);
+
+        int nbPlaques = nbPlaques(workingList);
+
+        if(nbPlaques>1){
+            int i = 0; //degré de rotation
+            boolean end = false;
+            while(i<359 && !end){
+                workingList  = rotationForms(workingList, i);
+                //TODO liste à retenir pour faire la translation sur le fichier directement
+                ArrayList<Double> trans = transXY(workingList);
+                if(trans.get(0) != 0 && trans.get(1) != 0)
+                    workingList = translation(workingList, trans.get(0), trans.get(1));
+                if(nbPlaques(workingList)==1){
+                    solution = workingList;
+                    end = true;
+                }
+                if(nbPlaques(workingList)<nbPlaques){
+                    nbPlaques = nbPlaques(workingList);
+                    solution = workingList;
+                }
+                i++;
+            }
+        }
+
+        //TODO modifier la réécriture du fichier pour écrire la bonne translation et le bon degré de rotation grace aux resultats obtenus ci-dessus
+
+        /* --- FIN TEST --- */
+        //on écrit le nouveau SVG file
+        try {
+            WriteNewFile(listForms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*affichage de la fenêtre*/
     public void paint(Graphics g) {
         super.paint(g);
@@ -712,69 +933,10 @@ public class Test extends JPanel {
         g.drawLine(0, 500, 1000, 500);
         g.drawLine(500, 0, 500, 1000);
 
-
-        ArrayList<Forms> listForms = null;
-        try {
-            listForms = readSVG(getPathnamefile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //on trie la liste en fonction du point le plus a gauche
-        listForms = listeTrieeX(listForms);
-
-        //Translation le plus à gauche possible
-        listForms = translationX(listForms);
-
-        //on trie la liste en fonction du point le plus a gauche
-        listForms = listeTrieeY(listForms);
-
-        /* --- TEST --- */
-
-        //Translation le plus haut possible
-        listForms = translationY(listForms);
-
-        ArrayList<Forms> res = new ArrayList<>();
-        res = rotationForms(listForms, -10);
-
-        res = translation(listForms, 40, 40);
-        res = listeTrieeX(res);
-        res = translationX(res);
-
-        res = listeTrieeY(res);
-        res = translationY(res);
-
-        /* --- FIN TEST --- */
-
-        try {
-            WriteNewFile(res);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        /*for(int i = 0; i< listForms.size(); i++){
-            if(listForms.get(i) instanceof Circle){
-                Circle c = (Circle)listForms.get(i);
-                g.fillOval((int)c.getCx(), (int)c.getCy(), (int)c.getRayon(), (int)c.getRayon());
-            }
-            else if(listForms.get(i) instanceof Rectangle){
-                Rectangle r = (Rectangle)listForms.get(i);
-                g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
-            }
-            else if(listForms.get(i) instanceof Ellipse){
-                Ellipse e = (Ellipse)listForms.get(i);
-                g.fillOval((int)e.getCx(), (int)e.getCy(), (int)e.getRayonX(), (int)e.getRayonY());
-            }
-            //ne fonctionne pas
-            else if(listForms.get(i) instanceof Trace){
-                Trace t = (Trace)listForms.get(i);
-                ArrayList<Point> listPoints = t.getListPoints();
-                for(int j = 0 ; j<listPoints.size(); j++)
-                    g.drawLine((int)listPoints.get(i).getX(), (int)listPoints.get(i).getY(), (int)listPoints.get(j++).getX(), (int)listPoints.get(j++).getY());
-            }
-        }*/
+        algo();
     }
 
+    //TODO ecrire rotation
     public void WriteNewFile(ArrayList<Forms> listForms) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(pathnamefile));
         String line;
@@ -786,10 +948,16 @@ public class Test extends JPanel {
         while ((line = br.readLine()) != null) {
             //si on on tombe sur une forme on recopie une forme
             if(line.contains("<rec") || line.contains("<circle") || line.contains("<ellipse")){
+                if(index==0){
+                    if(getRotate()!=0)
+                        fw.write("<g transform = \"" + "rotate("+getRotate()+")\">\n");
+                }
                 fw.write(listForms.get(index++).toString());
                 //si la forme est spécifiée sur le plusieurs lignes
                 while(!line.contains("/>"))
                     line = br.readLine();
+                if(index==listForms.size())
+                    fw.write("</g>\n");
             }
             else
                 fw.write(line+"\n"); //on recopie la ligne du fichier

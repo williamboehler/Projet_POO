@@ -5,6 +5,7 @@ public class Circle extends Forms {
     private double cx; //centre du cercle
     private double cy;
     private double rayon;
+    private double rotate = -10;
 
     public Circle(double cx, double cy, double rayon) {
         this.cx = cx;
@@ -44,9 +45,37 @@ public class Circle extends Forms {
         return getCy() - getRayon();
     }
 
+    public double getRightXPoint(){
+        return getCx() + getRayon();
+    }
+
+    public double getRightYPoint(){
+        return getCy() + getRayon();
+    }
+
+    public double getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(double rotate) {
+        this.rotate = rotate;
+    }
+
+    public String rotate(){
+        return "<g transform = \"" + "rotate("+getRotate()+")\">\n";
+    }
+
     @Override
     public String toString(){
-        return "<circle cx=\"" + getCx() + "\" cy=\"" + getCy() + "\" r=\"" + getRayon() +"\" />\n";
+        String res = "";
+        /*if(getRotate()!=0){
+            res += rotate();
+        }*/
+        res = "<circle cx=\"" + getCx() + "\" cy=\"" + getCy() + "\" r=\"" + getRayon() +"\" />\n";
+        /*if(getRotate()!=0){
+            res += "</g>\n";
+        }*/
+        return res;
     }
 
 }
