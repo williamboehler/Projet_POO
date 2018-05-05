@@ -4,15 +4,16 @@ import models.Rectangle;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Test extends JPanel {
 
     private String pathnamefile;
     private double rotate = 0;
-    private Point p1 = new Point(50, 0);
-    private Point p2 = new Point(0, 50);
+    private double transX = 0;
+    private double transY = 0;
+    private Point p1 = new Point(500, 0);
+    private Point p2 = new Point(0, 500);
 
     public Test(String file) {
         this.pathnamefile = file;
@@ -895,20 +896,26 @@ public class Test extends JPanel {
         int nbPlaques = nbPlaques(workingList);
 
         if(nbPlaques>1){
-            int i = 0; //degré de rotation
+            int i = 1; //degré de rotation
             boolean end = false;
             while(i<359 && !end){
-                workingList  = rotationForms(workingList, i);
-                //TODO liste à retenir pour faire la translation sur le fichier directement
+                workingList  = rotationForms(workingList, 1);
+                //TODO liste à retenir pour faire la translation sur le fichier directement?
                 ArrayList<Double> trans = transXY(workingList);
-                if(trans.get(0) != 0 && trans.get(1) != 0)
+                if(trans.get(0) != 0 || trans.get(1) != 0) {
                     workingList = translation(workingList, trans.get(0), trans.get(1));
+                }
                 if(nbPlaques(workingList)==1){
+                    nbPlaques = nbPlaques(workingList);
                     solution = workingList;
+                    this.rotate = i;
+                    System.out.println("i1 = " + i);
                     end = true;
                 }
                 if(nbPlaques(workingList)<nbPlaques){
                     nbPlaques = nbPlaques(workingList);
+                    this.rotate = i;
+                    System.out.println("i2 = " + i);
                     solution = workingList;
                 }
                 i++;
