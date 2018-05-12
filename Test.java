@@ -12,11 +12,13 @@ public class Test /*extends JPanel*/ {
     private double rotate = 0;
     private double transX = 0;
     private double transY = 0;
-    private Point p1 = new Point(500, 0);
-    private Point p2 = new Point(0, 500);
+    private Point p1;
+    private Point p2;
 
-    public Test(String file) {
+    public Test(String file, double dimX, double dimY) {
         this.pathnamefile = file;
+        this.p1 = new Point(dimX, 0);
+        this.p2 = new Point(0, dimY);
     }
 
     public String getPathnamefile() {
