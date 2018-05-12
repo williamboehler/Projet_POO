@@ -83,5 +83,6 @@ public class GUI extends JFrame {
         };
         this.addWindowListener(wa);
         this.setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 }
