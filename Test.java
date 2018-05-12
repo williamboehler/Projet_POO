@@ -6,7 +6,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-public class Test extends JPanel {
+public class Test /*extends JPanel*/ {
 
     private String pathnamefile;
     private double rotate = 0;
@@ -765,7 +765,7 @@ public class Test extends JPanel {
             Rectangle r = (Rectangle) workingList.get(indexRight);
             if(r.getX()+r.getWidth()>p1.getX() && r.getY()+r.getHeight()<p2.getY())
                 plaque2 = true;
-            if(r.getX()+getWidth()>p1.getX() && r.getY()+r.getHeight()>p2.getY())
+            if(r.getX()+r.getWidth()>p1.getX() && r.getY()+r.getHeight()>p2.getY())
                 plaque4 = true;
             if(r.getX()+r.getWidth()<p1.getX() && r.getY()+r.getHeight()>p2.getY())
                 plaque3 = true;
@@ -796,7 +796,7 @@ public class Test extends JPanel {
             Rectangle r = (Rectangle) workingList.get(indexRight);
             if(r.getX()+r.getWidth()>p1.getX() && r.getY()+r.getHeight()<p2.getY())
                 plaque2 = true;
-            if(r.getX()+getWidth()>p1.getX() && r.getY()+r.getHeight()>p2.getY())
+            if(r.getX()+r.getWidth()>p1.getX() && r.getY()+r.getHeight()>p2.getY())
                 plaque4 = true;
             if(r.getX()+r.getWidth()<p1.getX() && r.getY()+r.getHeight()>p2.getY())
                 plaque3 = true;
@@ -896,9 +896,10 @@ public class Test extends JPanel {
         int nbPlaques = nbPlaques(workingList);
 
         if(nbPlaques>1){
+            workingList = copyListForms(solution);
             int i = 1; //degré de rotation
             boolean end = false;
-            while(i<359 && !end){
+            while(i<360 && !end){
                 workingList  = rotationForms(workingList, 1);
                 //TODO liste à retenir pour faire la translation sur le fichier directement?
                 ArrayList<Double> trans = transXY(workingList);
@@ -908,6 +909,7 @@ public class Test extends JPanel {
                 if(nbPlaques(workingList)==1){
                     nbPlaques = nbPlaques(workingList);
                     solution = workingList;
+                    listForms = translation(listForms, trans.get(0), trans.get(1));
                     this.rotate = i;
                     System.out.println("i1 = " + i);
                     end = true;
@@ -934,14 +936,14 @@ public class Test extends JPanel {
     }
 
     /*affichage de la fenêtre*/
-    public void paint(Graphics g) {
+    /*public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.BLACK);
         g.drawLine(0, 500, 1000, 500);
         g.drawLine(500, 0, 500, 1000);
 
         algo();
-    }
+    }*/
 
     //TODO ecrire rotation
     public void WriteNewFile(ArrayList<Forms> listForms) throws IOException {

@@ -13,7 +13,9 @@ public class Program {
     }
 
     public static void main(String[] args) {
-        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        GUI g = new GUI();
+
+        /*JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         Test jc;
         int returnValue = jfc.showOpenDialog(null);
 
@@ -36,6 +38,6 @@ public class Program {
                             JOptionPane.ERROR_MESSAGE);
                     exit(0);
                 }
-            }
+            }*/
     }
 }
